@@ -1,31 +1,41 @@
-require "pry"
-require 'nokogiri'
-require "open"
-class Scraper
-  def self.scrape_index_page
-    student_index_array = []
-    html = Nokogiri::HTML(open(index_url))
-    html.css(".student-card").collect do |stutdent|
-      hash = {
-        name: stutdent.css("h4.student_name").text,
-        location: student.css("p.student-location").text,
-        profile_url: "http://students.learn.co/" = student.css("a").attribute("href")
-      }
-      student_index_array << hash
-    end
-    student_index_array
-  end
-  
-  def self.scrape_profile_page(profile_url)
-    student_index_array = {}
-    
-    html = Nokogiri::HTML(open(profile_url))
-    html.css("div.social-icon-controller a").each do |student|
-      url = student.attribute("href")
-      student_index_array[:twitter_url] = url if url.include? ("twitter")
-    end
-  end
-end
+require 'open-uri'
+require 'pry'
 
-end
+class Scraper
+
+  def self.scrape_index_page(index_url)
+    html = open(index_url)
+    doc = Nokogiri::HTML(html)
+    student_cards = doc.css(".student-card a")
+    student_cards.collect do |element|
+      {:name => element.css(".student-name").text ,
+        :location => element.css(".student-location").text,
+        :profile_url => element.attr('href')
+      }
+    end
+  end
+
+  def self.scrape_profile_page(profile_url)
+    html = open(profile_url)
+    doc = Nokogiri::HTML(html)
+    return_hash = {}
+
+      social = doc.css(".vitals-container .social-icon-container a")
+      social.each do |element| #iterate through each of the social elements and assign the keys if the item exists
+        if element.attr('href').include?("twitter")
+          return_hash[:twitter] = element.attr('href')
+        elsif element.attr('href').include?("linkedin")
+          return_hash[:linkedin] = element.attr('href')
+        elsif element.attr('href').include?("github")
+          return_hash[:github] = element.attr('href')
+        elsif element.attr('href').end_with?("com/")
+          return_hash[:blog] = element.attr('href')
+        end
+      end
+      return_hash[:profile_quote] = doc.css(".vitals-container .vitals-text-container .profile-quote").text
+      return_hash[:bio] = doc.css(".bio-block.details-block .bio-content.content-holder .description-holder p").text
+
+  return_hash
+  end
+
 end
