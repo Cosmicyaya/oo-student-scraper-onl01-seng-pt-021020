@@ -3,6 +3,6 @@ require 'nokogiri'
 
 class Scraper
   def self.scrape_index_page
-    student_hash = []
+    student_index_array = []
   end
 end
