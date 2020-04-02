@@ -17,3 +17,5 @@ class Scraper
     student_index_array
   end
 end
+
+end
