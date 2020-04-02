@@ -13,10 +13,11 @@ class Scraper
       }
       student_index_array << hash
     end
-  end
     student_index_array
   end
-end
-
-end
-end
+  
+  def self.scrape_profile_page(profile_url)
+    student_index_array = {}
+    
+    html = Nokogiri::HTML(open(profile_url))
+    html.css("div.social-icon-controller a").each do |student|
