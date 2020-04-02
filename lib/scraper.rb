@@ -1,6 +1,6 @@
 require "pry"
 require 'nokogiri'
-
+require "open"
 class Scraper
   def self.scrape_index_page
     student_index_array = []
