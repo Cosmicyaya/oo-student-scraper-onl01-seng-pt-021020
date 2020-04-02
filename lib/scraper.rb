@@ -13,8 +13,7 @@ class Scraper
       }
       student_index_array << hash
     end
+  end
     student_index_array
   end
-end
-
 end
